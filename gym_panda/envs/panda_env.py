@@ -15,7 +15,6 @@ class PandaEnv(gym.Env):
     def __init__(self):
         p.connect(p.GUI)
         p.resetDebugVisualizerCamera(cameraDistance=1.5, cameraYaw=0, cameraPitch=-40, cameraTargetPosition=[0.55,-0.35,0.2])
-
         self.action_space = spaces.Box(np.array([-1]*4), np.array([1]*4))
         self.observation_space = spaces.Box(np.array([-1]*5), np.array([1]*5))
 
@@ -33,13 +32,9 @@ class PandaEnv(gym.Env):
         newPosition = [currentPosition[0] + dx,
                        currentPosition[1] + dy,
                        currentPosition[2] + dz]
-        jointPoses = p.calculateInverseKinematics(self.pandaUid,11,newPosition, orientation)
+        jointPoses = p.calculateInverseKinematics(self.pandaUid,11,newPosition, orientation)[0:7]
 
-        for i in range(7):# DoF
-            p.setJointMotorControl2(self.pandaUid, i, p.POSITION_CONTROL, jointPoses[i])
-
-        p.setJointMotorControl2(self.pandaUid, 9, p.POSITION_CONTROL, fingers)
-        p.setJointMotorControl2(self.pandaUid, 10, p.POSITION_CONTROL, fingers)
+        p.setJointMotorControlArray(self.pandaUid, list(range(7))+[9,10], p.POSITION_CONTROL, list(jointPoses)+2*[fingers])
 
         p.stepSimulation()
 
@@ -58,6 +53,7 @@ class PandaEnv(gym.Env):
 
     def reset(self):
         p.resetSimulation()
+        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING,0) # we will enable rendering after we loaded everything
         urdfRootPath=pybullet_data.getDataPath()
         p.setGravity(0,0,-10)
 
@@ -78,6 +74,7 @@ class PandaEnv(gym.Env):
         state_robot = p.getLinkState(self.pandaUid, 11)[0]
         state_fingers = (p.getJointState(self.pandaUid,9)[0], p.getJointState(self.pandaUid, 10)[0])
         observation = state_robot + state_fingers
+        p.configureDebugVisualizer(p.COV_ENABLE_RENDERING,1)
         return observation
 
     def render(self, mode='human'):
