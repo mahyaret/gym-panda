@@ -5,6 +5,9 @@
 
 OpenaAI Gym Franka Emika Panda robot grasping environment implemented with PyBullet
 
+
+![](https://www.etedal.net/img/twenty/panda.gif)
+
 ## Links
 
 - GitHub: [https://github.com/mahyaret/gym-panda](https://github.com/mahyaret/gym-panda)
