@@ -1,0 +1,11 @@
+language: python
+python:
+- '3.6'
+cache:
+  pip: true
+#  directories:
+#  - $HOME/data
+install:
+- pip install .
+script:
+- pytest -n auto
