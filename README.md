@@ -1,8 +1,9 @@
 # gym-panda
 
 [![Build Status](https://travis-ci.org/mahyaret/gym-panda.svg?branch=master)](https://travis-ci.org/mahyaret/gym-panda)
-[![PyPI version](https://badge.fury.io/py/gym-panda.svg)](https://badge.fury.io/py/gym-panda)
 [![Downloads](https://pepy.tech/badge/gym-panda)](https://pepy.tech/project/gym-panda)
+[![PyPI version](https://badge.fury.io/py/gym-panda.svg)](https://badge.fury.io/py/gym-panda)
+
 
 OpenaAI Gym Franka Emika Panda robot grasping environment implemented with PyBullet
 
