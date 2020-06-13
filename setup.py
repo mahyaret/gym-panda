@@ -5,7 +5,7 @@ setuptools.setup(
     name='gym_panda',
     author="Mahyar Abdeetedal",
     author_email="mahyar.etedal@icloud.com",
-    version='0.0.5',
+    version='0.0.6',
     description="An OpenAI Gym Env for Panda",
     long_description=Path("README.md").read_text(),
     long_description_content_type="text/markdown",

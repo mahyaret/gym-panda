@@ -48,8 +48,8 @@ class PandaEnv(gym.Env):
             reward = 0
             done = False
         info = state_object
-        observation = state_robot + state_fingers
-        return observation, reward, done, info
+        self.observation = state_robot + state_fingers
+        return self.observation, reward, done, info
 
     def reset(self):
         p.resetSimulation()
@@ -73,9 +73,9 @@ class PandaEnv(gym.Env):
         self.objectUid = p.loadURDF(os.path.join(urdfRootPath, "random_urdfs/000/000.urdf"), basePosition=state_object)
         state_robot = p.getLinkState(self.pandaUid, 11)[0]
         state_fingers = (p.getJointState(self.pandaUid,9)[0], p.getJointState(self.pandaUid, 10)[0])
-        observation = state_robot + state_fingers
+        self.observation = state_robot + state_fingers
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING,1)
-        return observation
+        return self.observation
 
     def render(self, mode='human'):
         view_matrix = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0.7,0,0.05],
@@ -99,6 +99,9 @@ class PandaEnv(gym.Env):
 
         rgb_array = rgb_array[:, :, :3]
         return rgb_array
+
+    def _get_state(self):
+        return self.observation
 
     def close(self):
         p.disconnect()
