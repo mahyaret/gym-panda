@@ -39,14 +39,12 @@ Running an environment:
 import gym
 import gym_panda
 env = gym.make('panda-v0')
-
-obs = env.reset()
-done = False
-while not done:
-    action = env.action_space.sample()
-
+env.reset()
+for _ in range(100):
+    env.render()
     obs, reward, done, info = env.step(
-        action)
+        env.action_space.sample()) # take a random action
+env.close()
  ```
  
  Running a PD control HACK!
