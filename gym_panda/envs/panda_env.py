@@ -9,10 +9,14 @@ import math
 import numpy as np
 import random
 
+
+MAX_EPISODE_LEN = 20*100
+
 class PandaEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self):
+        self.step_counter = 0
         p.connect(p.GUI)
         p.resetDebugVisualizerCamera(cameraDistance=1.5, cameraYaw=0, cameraPitch=-40, cameraTargetPosition=[0.55,-0.35,0.2])
         self.action_space = spaces.Box(np.array([-1]*4), np.array([1]*4))
@@ -41,17 +45,28 @@ class PandaEnv(gym.Env):
         state_object, _ = p.getBasePositionAndOrientation(self.objectUid)
         state_robot = p.getLinkState(self.pandaUid, 11)[0]
         state_fingers = (p.getJointState(self.pandaUid,9)[0], p.getJointState(self.pandaUid, 10)[0])
+
+
+
         if state_object[2]>0.45:
             reward = 1
             done = True
         else:
             reward = 0
             done = False
+
+        self.step_counter += 1
+
+        if self.step_counter > MAX_EPISODE_LEN:
+            reward = 0
+            done = True
+
         info = state_object
         self.observation = state_robot + state_fingers
         return self.observation, reward, done, info
 
     def reset(self):
+        self.step_counter = 0
         p.resetSimulation()
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING,0) # we will enable rendering after we loaded everything
         urdfRootPath=pybullet_data.getDataPath()
