@@ -61,9 +61,9 @@ class PandaEnv(gym.Env):
             reward = 0
             done = True
 
-        info = state_object
+        info = {'object_position': state_object}
         self.observation = state_robot + state_fingers
-        return self.observation, reward, done, info
+        return np.array(self.observation).astype(np.float32), reward, done, info
 
     def reset(self):
         self.step_counter = 0
@@ -90,7 +90,7 @@ class PandaEnv(gym.Env):
         state_fingers = (p.getJointState(self.pandaUid,9)[0], p.getJointState(self.pandaUid, 10)[0])
         self.observation = state_robot + state_fingers
         p.configureDebugVisualizer(p.COV_ENABLE_RENDERING,1)
-        return self.observation
+        return np.array(self.observation).astype(np.float32)
 
     def render(self, mode='human'):
         view_matrix = p.computeViewMatrixFromYawPitchRoll(cameraTargetPosition=[0.7,0,0.05],
