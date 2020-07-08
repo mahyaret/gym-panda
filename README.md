@@ -58,7 +58,7 @@ observation = env.reset()
 done = False
 error = 0.01
 fingers = 1
-info = [0.7, 0, 0.1]
+object_position = [0.7, 0, 0.1]
 
 k_p = 10
 k_d = 1
@@ -71,9 +71,9 @@ for i_episode in range(20):
     for t in range(100):
         env.render()
         print(observation)
-        dx = info[0]-observation[0]
-        dy = info[1]-observation[1]
-        target_z = info[2] 
+        dx = object_position[0]-observation[0]
+        dy = object_position[1]-observation[1]
+        target_z = object_position[2] 
         if abs(dx) < error and abs(dy) < error and abs(dz) < error:
             fingers = 0
         if (observation[3]+observation[4])<error+0.02 and fingers==0:
@@ -84,6 +84,7 @@ for i_episode in range(20):
         pd_z = k_p*dz + k_d*dz/dt
         action = [pd_x,pd_y,pd_z,fingers]
         observation, reward, done, info = env.step(action)
+        object_position = info['object_position']
         if done:
             print("Episode finished after {} timesteps".format(t+1))
             break
